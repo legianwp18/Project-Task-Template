@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="project_task_template_master_view_form" model="ir.ui.view">
+            <field name="name">project.task.template.master.view.form</field>
+            <field name="model">project.task.template.master</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <div class="oe_title pe-0">
+                            <h1 class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex w-100">
+                                    <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
+                                </div>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Task Items">
+                                <field name="task_template_ids">
+                                    <tree>
+                                        <field name="master_id" invisible="1"/>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                        <field name="parent_id"/>
+                                        <field name="priority"/>
+                                        <field name="user_ids" widget="many2many_tags"/>
+                                    </tree>
+                                    <form>
+                                        <div class="oe_title pe-0">
+                                            <h1 class="d-flex justify-content-between align-items-center">
+                                                <div class="d-flex w-100">
+                                                    <field name="priority" widget="priority" class="me-3"/>
+                                                    <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
+                                                </div>
+                                            </h1>
+                                        </div>
+                                        <group>
+                                            <group>
+                                                <field name="sequence" invisible="1"/>
+                                                <field name="name"/>
+                                                <field name="parent_id"/>
+                                            </group>
+                                            <group>
+                                                <field name="user_ids" widget="many2many_tags"/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <field name="description" nolabel="1"/>
+                                        </group>
+                                        <notebook>
+                                            <page string="Child Task">
+                                                <field name="child_ids">
+                                                    <tree>
+                                                        <field name="master_id" invisible="1"/>
+                                                        <field name="sequence" widget="handle"/>
+                                                        <field name="name"/>
+                                                        <field name="description"/>
+                                                        <field name="parent_id"/>
+                                                        <field name="priority"/>
+                                                        <field name="user_ids" widget="many2many_tags"/>
+                                                    </tree>
+                                                </field>
+                                            </page>
+                                        </notebook>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" options="{'post_refresh':True}" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="project_task_template_master_action" model="ir.actions.act_window">
+            <field name="name">Task Template</field>
+            <field name="res_model">project.task.template.master</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            id="task_template_menu"
+            name="Task Template"
+            action="project_task_template_master_action"
+            parent="project.menu_main_pm"
+            sequence="11"/>
+    </data>
+</odoo>
