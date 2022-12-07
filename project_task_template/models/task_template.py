@@ -4,26 +4,16 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
-class TaskTemplateMaster(models.Model):
-    _name = "project.task.template.master"
-    _description = "Project Template Master"
-    _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
-
-    name = fields.Char('Name Template')
-    description = fields.Char('Description')
-    task_template_ids = fields.One2many('project.task.template', 'master_id', string='Task Template')
-
 class TaskTemplate(models.Model):
     _name = "project.task.template"
     _description = "Task Template"
     _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
 
     name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
-    master_id = fields.Many2one('project.task.template.master', string='Master')
     description = fields.Html(string='Description')
-    parent_id = fields.Many2one('project.task.template', string='Parent Task', index=True)
-    predecessors_id = fields.Many2one('project.task.template', string='Predecessors', index=True)
-    successors_id = fields.Many2one('project.task.template', string='Successors', index=True)
+    parent_id = fields.Many2one('project.task.template', string='Parent Task', index=True, ondelete='cascade')
+    predecessors_id = fields.Many2one('project.task.template', string='Predecessors', index=True, ondelete='cascade')
+    successors_id = fields.Many2one('project.task.template', string='Successors', index=True, ondelete='cascade')
     child_ids = fields.One2many('project.task.template', 'parent_id', string="Sub-tasks")
     priority = fields.Selection([
         ('0', 'Low'),
@@ -39,16 +29,10 @@ class TaskTemplate(models.Model):
         context={'active_test': False}, 
         tracking=True
     )
-    work_days = fields.Integer('Work Days', default=1)
-
-
-    ## Belum Work
-    @api.onchange('parent_id')
-    def get_price(self):
-        if self.parent_id:
-            self.write({'master_id' : False})
-
-    ## Auto Parent Belum Jalan
+    work_days = fields.Integer(
+        string = 'Work Days',
+        default=1
+    )
 
     ### Predoseso dan susesor blm
     

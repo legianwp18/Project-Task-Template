@@ -19,15 +19,12 @@
                         <group>
                             <group>
                                 <field name="sequence" invisible="1"/>
-                                <field name="parent_id"/>
+                                <field name="parent_id" invisible="1"/>
                                 <field name="predecessors_id" 
                                     domain="[
                                             ('parent_id', '=', parent_id),
                                             ('parent_id', '!=', False),
                                     ]"
-                                    attrs="{
-                                        'readonly': [('parent_id', '=', False)]
-                                    }"
                                 />
                                 <field name="successors_id" domain="[
                                         ('parent_id', '=', parent_id),
@@ -49,54 +46,9 @@
                                         <field name="sequence" widget="handle"/>
                                         <field name="name"/>
                                         <field name="description"/>
-                                        <field name="parent_id"/>
+                                        <field name="parent_id" invisible="1"/>
                                         <field name="priority"/>
-                                        <field name="user_ids" widget="many2many_tags"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" options="{'post_refresh':True}" groups="base.group_user"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
-                    </div>
-                </form>
-            </field>
-        </record>
-
-        <record id="project_task_template_master_view_form" model="ir.ui.view">
-            <field name="name">project.task.template.master.view.form</field>
-            <field name="model">project.task.template.master</field>
-            <field name="arch" type="xml">
-                <form string="">
-                    <sheet>
-                        <div class="oe_title pe-0">
-                            <h1 class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex w-100">
-                                    <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
-                                </div>
-                            </h1>
-                        </div>
-                        <group>
-                            <group>
-                                <field name="description"/>
-                            </group>
-                            <group>
-                                
-                            </group>
-                        </group>
-                        <notebook>
-                            <page string="Task Items">
-                                <field name="task_template_ids">
-                                    <tree>
-                                        <field name="master_id" invisible="1"/>
-                                        <field name="sequence" widget="handle"/>
-                                        <field name="name"/>
-                                        <field name="description"/>
-                                        <field name="parent_id"/>
-                                        <field name="priority"/>
+                                        <field name="work_days" sum="Total"/>
                                         <field name="user_ids" widget="many2many_tags"/>
                                     </tree>
                                     <form>
@@ -111,9 +63,19 @@
                                         <group>
                                             <group>
                                                 <field name="sequence" invisible="1"/>
-                                                <field name="parent_id"/>
-                                                <field name="predecessors_id"/>
-                                                <field name="successors_id"/>
+                                                <field name="parent_id" invisible="1"/>
+                                                <field name="predecessors_id"
+                                                    domain="[
+                                                        ('parent_id', '=', parent_id),
+                                                        ('parent_id', '!=', False),
+                                                    ]"
+                                                />
+                                                <field name="successors_id"
+                                                    domain="[
+                                                        ('parent_id', '=', parent_id),
+                                                        ('parent_id', '!=', False),
+                                                    ]"
+                                                />
                                             </group>
                                             <group>
                                                 <field name="work_days"/>
@@ -127,12 +89,12 @@
                                             <page string="Child Task">
                                                 <field name="child_ids" context="{'default_parent_id': id}">
                                                     <tree>
-                                                        <field name="master_id" invisible="1"/>
                                                         <field name="sequence" widget="handle"/>
                                                         <field name="name"/>
                                                         <field name="description"/>
-                                                        <field name="parent_id"/>
+                                                        <field name="parent_id" invisible="1"/>
                                                         <field name="priority"/>
+                                                        <field name="work_days" sum="Total"/>
                                                         <field name="user_ids" widget="many2many_tags"/>
                                                     </tree>
                                                 </field>
@@ -152,16 +114,17 @@
             </field>
         </record>
 
-        <record id="project_task_template_master_action" model="ir.actions.act_window">
+        <record id="project_task_template_action" model="ir.actions.act_window">
             <field name="name">Task Template</field>
-            <field name="res_model">project.task.template.master</field>
+            <field name="res_model">project.task.template</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('parent_id', '=', False)]</field>
         </record>
 
         <menuitem
             id="task_template_menu"
             name="Task Template"
-            action="project_task_template_master_action"
+            action="project_task_template_action"
             parent="project.menu_main_pm"
             sequence="11"/>
     </data>
