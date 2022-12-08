@@ -13,8 +13,8 @@
 	'depends': ['base','project'],
 	'data': [
 		'security/ir.model.access.csv',
-		'views/project_task_templates.xml',
-		'views/project_templates.xml',
+		'views/project_task_templates_view.xml',
+		'views/project_view.xml',
 	],
 	'license': 'LGPL-3',
 }

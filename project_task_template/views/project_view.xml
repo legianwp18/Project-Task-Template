@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+       <record model="ir.ui.view" id="view_task_form2">
+            <field name="name">project.task.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_ids']" position="after">
+                    <field name="task_template_id"/>
+                    <field name="predecessors_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="project_project_view_form_simplified">
+            <field name="name">project.project.view.form.simplified</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <label for="task_template_id" string="Task Template"/>
+                    <div>
+                        <field name="task_template_id" placeholder="e.g. Task Template"/>
+                    </div>
+                    <label for="date_start" string="Planned Date"/>
+                    <div name="dates" class="o_row">
+                        <field name="date_start" widget="daterange" options="{&quot;related_end_date&quot;: &quot;date&quot;}"/>
+                        <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                        <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('date_start', '=', False), ('date', '=', False)]}"/>
+                        <field name="date" widget="daterange" options="{&quot;related_start_date&quot;: &quot;date_start&quot;}"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="edit_project">
+            <field name="name">project.project.form</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(project.project_share_wizard_action)d']" position="after">
+                    <field name="task_count" invisible="1"/>
+                    <button name="generator_task_line" string="Generator" type="object" class="oe_highlight" data-hotkey="r" attrs="{'invisible':[('task_count', '&gt;', 0)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="task_template_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
