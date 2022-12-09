@@ -54,12 +54,22 @@ class Project(models.Model):
                     if template.predecessors_id:
                         filter_task_predecessors = [('task_template_id','=',template.predecessors_id.id)]
                         task_predecessors = task_obj.search(filter_task_predecessors, limit=1)
+
+                    date_deadline=False
+                    if not template.parent_id:
+                        date_deadline = self.date_start + timedelta(days=template.work_days)
+                    elif task_predecessors:
+                        date_deadline = task_predecessors.date_deadline + timedelta(days=template.work_days)
+                    elif task_parent:
+                        date_deadline = task_parent.date_deadline + timedelta(days=template.work_days)
+
                     record = {
                         'name': template.name,
                         'description':template.description,
                         'project_id':rec.id,
                         'display_project_id':rec.id,
                         'task_template_id':template.id,
+                        'date_deadline':date_deadline,
                         'predecessors_id':task_predecessors.id if task_predecessors else False,
                         'priority':template.priority,
                         'sequence':template.sequence,
